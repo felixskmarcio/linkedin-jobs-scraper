@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12314F"/>
+      <stop offset="1" stop-color="#0B1E33"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+
+  <!-- lens -->
+  <circle cx="224" cy="224" r="124" fill="#0B1E33" stroke="#F4F7FA" stroke-width="30"/>
+
+  <!-- job card inside the lens: title, two meta lines, status dot (200 OK) -->
+  <rect x="150" y="186" width="148" height="24" rx="12" fill="#F4F7FA"/>
+  <rect x="150" y="226" width="100" height="18" rx="9" fill="#F4F7FA" opacity="0.5"/>
+  <rect x="150" y="258" width="64" height="18" rx="9" fill="#F4F7FA" opacity="0.5"/>
+  <circle cx="282" cy="267" r="15" fill="#17C3A2"/>
+
+  <!-- handle: white with a green tip -->
+  <path d="M318 318 L372 372" stroke="#F4F7FA" stroke-width="42" stroke-linecap="round"/>
+  <path d="M372 372 L420 420" stroke="#17C3A2" stroke-width="42" stroke-linecap="round"/>
+</svg>

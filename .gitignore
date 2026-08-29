@@ -4,3 +4,6 @@ linkedin_cookies.json
 data/
 __pycache__/
 *.pyc
+
+# Source assets (já copiados para media/)
+logos/
