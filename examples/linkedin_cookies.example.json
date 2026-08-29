@@ -1,0 +1,22 @@
+[
+  {
+    "domain": ".www.linkedin.com",
+    "expirationDate": 1819031287,
+    "httpOnly": true,
+    "name": "li_at",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "value": "COLE_AQUI_O_VALOR_DO_SEU_LI_AT"
+  },
+  {
+    "domain": ".www.linkedin.com",
+    "expirationDate": 1819031287,
+    "httpOnly": false,
+    "name": "JSESSIONID",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "value": "\"ajax:COLE_AQUI_O_SEU_JSESSIONID\""
+  }
+]

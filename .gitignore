@@ -1,0 +1,6 @@
+# Never commit real session cookies
+linkedin_cookies.json
+*.cookies.json
+data/
+__pycache__/
+*.pyc
