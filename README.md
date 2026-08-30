@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square" alt="Python 3.10+"/></a>
-  <a href="https://github.com/felixskmarcio/linkedin-jobs-scraper/blob/main/LICENSE"><img src="https://img.shields.io/github/license/felixskmarcio/linkedin-jobs-scraper?style=flat-square" alt="License"/></a>
+  <a href="https://github.com/felixskmarcio/linkedin-jobs-scraper/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License: MIT"/></a>
   <a href="https://github.com/felixskmarcio/linkedin-jobs-scraper/commits/main"><img src="https://img.shields.io/github/last-commit/felixskmarcio/linkedin-jobs-scraper?style=flat-square" alt="Last commit"/></a>
   <a href="https://github.com/felixskmarcio/linkedin-jobs-scraper/stargazers"><img src="https://img.shields.io/github/stars/felixskmarcio/linkedin-jobs-scraper?style=social" alt="GitHub stars"/></a>
 </p>
