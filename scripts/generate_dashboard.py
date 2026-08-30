@@ -5,6 +5,7 @@ Generate an HTML dashboard from scraped LinkedIn jobs JSON.
 Usage:
     python3 generate_dashboard.py data/linkedin_jobs.json data/dashboard.html
 """
+import html
 import json
 import os
 import sys
@@ -14,22 +15,24 @@ from datetime import datetime
 
 def bar_row(label: str, cnt: int, total: int) -> str:
     pct = (cnt / total) * 100 if total else 0
-    return (f'<div class="bar-row"><div class="bar-label">{label}</div>'
+    return (f'<div class="bar-row"><div class="bar-label">{html.escape(label)}</div>'
             f'<div class="bar-track"><div class="bar-fill" style="width:{pct:.0f}%"></div></div>'
             f'<div class="bar-count">{cnt}</div></div>')
 
 
 def job_row(i: int, j: dict) -> str:
-    salary = (f' <span class="tag tag-salary">{j["salary"]}</span>' if j.get("salary") else "")
+    salary = (f' <span class="tag tag-salary">{html.escape(j["salary"])}</span>' if j.get("salary") else "")
     loc = j.get("location") or ""
     home = (' <span class="tag tag-home">Remoto</span>'
             if any(k in loc.lower() for k in ("remote", "home")) or loc.strip().lower() == "brazil"
             else "")
+    link = j.get("link") or ""
+    href = link if link.startswith("https://") else "#"
     return (f'<tr><td>{i + 1}</td>'
-            f'<td><a class="job-title" href="{j.get("link") or "#"}" target="_blank">{j["title"]}</a>{salary}</td>'
-            f'<td class="company">{j.get("company") or ""}</td>'
-            f'<td class="location">{loc}{home}</td>'
-            f'<td class="location">{j.get("posted") or "N/A"}</td></tr>')
+            f'<td><a class="job-title" href="{html.escape(href)}" target="_blank" rel="noopener noreferrer">{html.escape(j["title"])}</a>{salary}</td>'
+            f'<td class="company">{html.escape(j.get("company") or "")}</td>'
+            f'<td class="location">{html.escape(loc)}{home}</td>'
+            f'<td class="location">{html.escape(j.get("posted") or "N/A")}</td></tr>')
 
 
 def main() -> int:
@@ -70,6 +73,7 @@ TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
 <title>Vagas LinkedIn — Dashboard</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}

@@ -8,9 +8,18 @@ echo "==> Checking dependencies..."
 command -v curl   >/dev/null || { echo "❌ curl not found (install: apt install curl)"; exit 1; }
 command -v python3 >/dev/null || { echo "❌ python3 not found"; exit 1; }
 
-echo "==> Installing Python deps (websocket-client for cookie injection only)..."
-python3 -m pip install -q -r requirements.txt 2>/dev/null \
-  || python3 -m pip install -q --break-system-packages -r requirements.txt
+echo "==> Setting up virtualenv (.venv)..."
+if python3 -c "import venv" 2>/dev/null && python3 -m venv .venv; then
+  # shellcheck disable=SC1091
+  source .venv/bin/activate
+  echo "==> Installing Python deps into .venv (websocket-client for cookie injection only)..."
+  pip install -q -r requirements.txt
+else
+  rm -rf .venv 2>/dev/null || true
+  echo "⚠️  venv indisponível — instalando no Python global..."
+  python3 -m pip install -q -r requirements.txt 2>/dev/null \
+    || python3 -m pip install -q --break-system-packages -r requirements.txt
+fi
 
 echo "==> Preparing data dir..."
 mkdir -p data
@@ -23,6 +32,9 @@ if [ "$COUNT" -gt 0 ]; then
   echo "✅ OK — $COUNT vagas coletadas no smoke test"
   echo ""
   echo "Próximos passos:"
+  if [ -f .venv/bin/activate ]; then
+    echo "  source .venv/bin/activate"
+  fi
   echo "  python3 scripts/scrape_jobs.py --remote --last24h --pages 5"
   echo "  python3 scripts/generate_dashboard.py data/linkedin_jobs.json data/dashboard.html"
 else

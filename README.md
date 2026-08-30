@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-  <strong>Coleta vagas pelo endpoint guest público do LinkedIn, gera um dashboard HTML e roda como skill do Hermes Agent — só Python stdlib + curl.</strong>
+  <strong>Coleta vagas pelo endpoint guest público do LinkedIn, gera um dashboard HTML e roda como skill do Hermes Agent - só Python stdlib + curl.</strong>
 </p>
 
 <p align="center">

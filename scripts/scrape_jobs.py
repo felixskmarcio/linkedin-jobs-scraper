@@ -39,16 +39,26 @@ WORK_MODES = {"onsite": "1", "remote": "2", "hybrid": "3"}
 TIME_RANGES = {"last24h": "r86400", "week": "r604800", "month": "r2592000"}
 
 
-def fetch_page(url: str) -> str:
-    """Fetch one results page via curl (subprocess keeps us stdlib-only)."""
+STATUS_MARKER = "\n__HTTP_STATUS__:"
+
+
+def fetch_page(url: str) -> tuple[str, str]:
+    """Fetch one results page via curl (subprocess keeps us stdlib-only).
+
+    Returns (body, http_status_code).
+    """
     cmd = [
         "curl", "-s", "-m", "20", url,
         "-H", f"User-Agent: {USER_AGENT}",
         "-H", "Accept: application/json, text/plain, */*",
         "-H", "x-li-lang: pt_BR",
+        "-w", f"{STATUS_MARKER}%{{http_code}}",
     ]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-    return r.stdout
+    idx = r.stdout.rfind(STATUS_MARKER)
+    if idx == -1:
+        return r.stdout, ""
+    return r.stdout[:idx], r.stdout[idx + len(STATUS_MARKER):].strip()
 
 
 def clean(text: str) -> str:
@@ -113,9 +123,18 @@ def main() -> int:
     all_jobs, seen = [], set()
     for page in range(args.pages):
         url = build_url(args.keywords, geo_id, work_mode, time_range, page * 10)
-        html = fetch_page(url)
+        html, status = fetch_page(url)
         jobs = parse_jobs(html)
-        print(f"[page {page + 1}/{args.pages}] {len(jobs)} vagas ({len(html)} bytes)", file=sys.stderr)
+        print(f"[page {page + 1}/{args.pages}] {len(jobs)} vagas ({len(html)} bytes, HTTP {status or '?'})",
+              file=sys.stderr)
+        if status == "429":
+            print("⚠️  HTTP 429 (Rate Limit) — o LinkedIn está limitando as requisições. "
+                  "Aumente --delay ou aguarde antes de tentar novamente.", file=sys.stderr)
+            break
+        if status == "999":
+            print("⚠️  HTTP 999 (Bloqueio anti-bot) — o LinkedIn bloqueou este cliente/IP. "
+                  "Pare a coleta e aguarde antes de tentar novamente.", file=sys.stderr)
+            break
         if not jobs:
             break  # no more results
         for job in jobs:

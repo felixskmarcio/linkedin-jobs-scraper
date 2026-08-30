@@ -36,6 +36,12 @@ google-chrome --headless --disable-gpu --no-sandbox \
   about:blank &
 ```
 
+> ⚠️ **Segurança:** a porta de depuração remota (`--remote-debugging-port`) não
+> tem autenticação — qualquer processo com acesso à porta (local ou, se exposta,
+> na rede) pode controlar o navegador e roubar a sessão via CDP. Rode-a apenas
+> em `localhost`, nunca a exponha publicamente, e **feche o processo do Chrome
+> assim que o script terminar** (`kill %1` ou `pkill -f remote-debugging-port`).
+
 ### 3. Injetar e validar
 
 ```bash

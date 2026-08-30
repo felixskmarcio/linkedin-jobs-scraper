@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 11 * * 1'   # segunda, 08h BRT
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.10"
+
+      - name: Compilar scripts
+        run: python -m py_compile scripts/*.py
+
+      - name: Verificar --help
+        run: |
+          python3 scripts/scrape_jobs.py --help
+          python3 scripts/generate_dashboard.py --help || true
+
+  # Teste real contra o LinkedIn. Roda só manualmente ou no agendamento,
+  # porque o endpoint pode bloquear IPs de datacenter e quebraria todo PR.
+  smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.10"
+      - name: Coletar 1 página
+        run: python3 scripts/scrape_jobs.py --keywords "Python" --geoId 106057199 --pages 1 --out data/ci.json
+      - name: Conferir saída
+        run: python3 -c "import json; d=json.load(open('data/ci.json')); print(len(d), 'vagas'); assert len(d) > 0"

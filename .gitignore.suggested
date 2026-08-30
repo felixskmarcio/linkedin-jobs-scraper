@@ -1,0 +1,4 @@
+data/*.json
+data/*.html
+examples/linkedin_cookies.json
+__pycache__/
